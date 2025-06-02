@@ -58,20 +58,20 @@
 
     <section class="contact-form">
         <div class="container">
-            <h2>Оставьте заявку</h2>
-            <form action="submit_form.php" method="POST">
-                <label for="name">Ваше имя:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="phone">Телефон:</label>
-                <input type="text" id="phone" name="phone" required>
-                <label for="message">Комментарий:</label>
-                <textarea id="message" name="message"></textarea>
-                <label>
-                    <input type="checkbox" name="privacy" required> Согласен с политикой конфиденциальности
-                </label>
-                <button type="submit">Отправить заявку</button>
-            </form>
-        </div>
+<h2>Оставьте заявку</h2>
+<form id="contactForm">
+    <label for="name">Ваше имя:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="phone">Телефон:</label>
+    <input type="text" id="phone" name="phone" required>
+    <label for="comment">Комментарий:</label>
+    <textarea id="comment" name="comment"></textarea>
+    <label>
+        <input type="checkbox" id="privacy" required> Согласен с политикой конфиденциальности
+    </label>
+    <button type="submit">Отправить</button>
+</form>
+</div>
     </section>
 
     <footer class="footer">
@@ -84,6 +84,41 @@
             </div>
         </div>
     </footer>
+
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const comment = document.getElementById("comment").value;
+  const accepted = document.getElementById("privacy").checked;
+
+  if (!accepted) {
+    alert("Необходимо согласие с политикой конфиденциальности");
+    return;
+  }
+
+  const message = `🆕 Новая заявка с сайта!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n💬 Комментарий: ${comment}\n🕐 Время: ${new Date().toLocaleString()}`;
+  const token = "7575101778:AAGQDD0hu5IHRCc-HAQOzGeLi41SZ7W295w";
+  const chatId = "6167483833";
+
+  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text: message })
+  })
+  .then(response => {
+    if (response.ok) {
+      alert("Заявка отправлена!");
+      document.getElementById("contactForm").reset();
+    } else {
+      alert("Ошибка при отправке. Попробуйте позже.");
+    }
+  });
+});
+</script>
 
 </body>
 </html>
